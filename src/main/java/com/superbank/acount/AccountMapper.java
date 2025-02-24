@@ -1,18 +1,26 @@
 package com.superbank.acount;
 
 import com.superbank.model.Account;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface AccountMapper {
+@Component
+public class AccountMapper {
 
-    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
+    public Account toEntity(CreateAccountRequestDto createAccountRequestDto) {
+        if(createAccountRequestDto == null) {
+            return null;
+        }
+        Account account = new Account();
+        account.setAccountNumber(createAccountRequestDto.getAccountNumber());
+        account.setBalance(createAccountRequestDto.getBalance());
+        return account;
+    }
 
-    @Mapping(target = "accountNumber", source = "accountNumber")
-    @Mapping(target = "balance", source = "balance")
-    Account toEntity(CreateAccountRequestDto createAccountRequestDto);
+    public AccountDto toDto(Account account) {
+        if(account==null) {
+            return null;
+        }
 
-    AccountDto toDto(Account account);
+        return new AccountDto(account.getAccountNumber(), account.getBalance(), account.getCreatedAt());
+    }
 }

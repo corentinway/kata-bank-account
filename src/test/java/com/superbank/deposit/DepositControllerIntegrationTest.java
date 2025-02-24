@@ -41,8 +41,8 @@ public class DepositControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        accountRepository.deleteAll();
         transactionRepository.deleteAll();
+        accountRepository.deleteAll();
     }
 
     @Test
@@ -85,6 +85,7 @@ public class DepositControllerIntegrationTest {
         final Transaction transaction = transactions.get(0);
         assertEquals(accountNumber, transaction.getAccount().getAccountNumber());
         assertEquals(expectedAmount, transaction.getAmount());
+        assertEquals("Deposit of 10.00 €", transaction.getDescription());
 
 
     }

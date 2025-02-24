@@ -44,10 +44,4 @@ public record AccountController(AccountService accountService) {
         accountService.createAccount(createAccountRequestDto);
     }
 
-    @GetMapping("/{accountNumber}")
-    public AccountDto getAccount(@PathVariable String accountNumber) throws AccountNotFoundException {
-        return accountService.findAccountStatement(accountNumber);
-    }
-
-
-}
+   }

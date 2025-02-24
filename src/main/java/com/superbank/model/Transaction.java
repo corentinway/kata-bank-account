@@ -23,6 +23,8 @@ public class Transaction {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    private String description;
+
     private BigDecimal amount;
 
     @CreatedDate
@@ -32,7 +34,5 @@ public class Transaction {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-
 
 }

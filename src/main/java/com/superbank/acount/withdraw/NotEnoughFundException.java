@@ -1,9 +1,9 @@
-package com.superbank.withdrawal;
+package com.superbank.acount.withdraw;
 
-public class WithdrawalInsufficientBalanceException extends Exception {
+public class NotEnoughFundException extends Throwable {
     private final String accountNumber;
 
-    public WithdrawalInsufficientBalanceException(String accountNumber) {
+    public NotEnoughFundException(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 

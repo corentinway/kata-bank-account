@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
@@ -22,15 +22,14 @@ public class AccountServiceTest {
     @Mock
     private AccountRepository accountRepository;
 
-    private AccountService sut;
+    @Autowired
+    private AccountMapper accountMapper;
 
-    public AccountServiceTest() {
-        MockitoAnnotations.openMocks(this);
-    }
+    private AccountService sut;
 
     @BeforeEach
     void setUp() {
-        sut = new AccountService(accountRepository, AccountMapper.INSTANCE);
+        sut = new AccountService(accountRepository, accountMapper);
         accountRepository.deleteAll();
     }
 
@@ -60,8 +59,8 @@ public class AccountServiceTest {
         Account found = accountToSaveReference.get();
 
         // Then
-        assertEquals(createAccountRequestDto.accountNumber(), found.getAccountNumber());
-        assertEquals(createAccountRequestDto.balance(), found.getBalance());
+        assertEquals(createAccountRequestDto.getAccountNumber(), found.getAccountNumber());
+        assertEquals(createAccountRequestDto.getBalance(), found.getBalance());
 
     }
 

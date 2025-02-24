@@ -2,12 +2,18 @@ package com.superbank.acount;
 
 import com.superbank.model.Account;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class AccountMapperTest {
+
+    @Autowired
+    private AccountMapper sut;
 
     @Test
     void shouldMapAccountToEntity(){
@@ -15,7 +21,7 @@ public class AccountMapperTest {
         CreateAccountRequestDto requestDto = new CreateAccountRequestDto("123", BigDecimal.TEN);
 
         // when
-        Account account = AccountMapper.INSTANCE.toEntity(requestDto);
+        Account account = sut.toEntity(requestDto);
 
         // then
         assertEquals("123", account.getAccountNumber());

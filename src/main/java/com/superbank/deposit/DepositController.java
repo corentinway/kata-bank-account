@@ -1,10 +1,7 @@
 package com.superbank.deposit;
 
-import com.superbank.acount.TransactionRepository;
-import com.superbank.model.Account;
 import com.superbank.acount.AccountNotFoundException;
-import com.superbank.acount.AccountService;
-import com.superbank.model.Transaction;
+import com.superbank.acount.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/deposit")
 @Tag(name = "Deposit", description = "API pour gérer le dépot d'argent sur un compte")
-public record DepositController(AccountService accountService, TransactionRepository transactionRepository) {
+public record DepositController(TransactionService transactionService) {
 
     @PostMapping
     @Operation(summary = "Effectuer un dépot d'argent sur un compte", description = "Effectue un dépot d'argent sur un compte bancaire")
@@ -32,22 +29,7 @@ public record DepositController(AccountService accountService, TransactionReposi
     public ResponseEntity<Void> deposit(
             @RequestBody @Valid DepositRequestDto depositRequestDto) throws AccountNotFoundException {
 
-        // validate account
-        final String accountNumber = depositRequestDto.accountNumber();
-
-        final Account account = accountService.findAccount(accountNumber);
-        // simple solution, everything is done here.
-        // if we add more checks, we can do a service
-
-
-        account.setBalance(account.getBalance().add(depositRequestDto.amount()));
-
-        final Transaction transaction = new Transaction();
-        transaction.setAccount(account);
-        transaction.setAmount(depositRequestDto.amount());
-        transactionRepository.save(transaction);
-
-        accountService.updateAccount(account);
+      transactionService.deposit(depositRequestDto);
 
         return ResponseEntity.ok().build();
     }

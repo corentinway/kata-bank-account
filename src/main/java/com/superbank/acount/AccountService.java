@@ -9,7 +9,7 @@ import java.util.List;
 public record AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
 
     public void createAccount(CreateAccountRequestDto createAccountRequestDto) {
-        Account account = accountMapper.toEntity(createAccountRequestDto);
+        final Account account = accountMapper.toEntity(createAccountRequestDto);
         accountRepository.save(account);
     }
 
@@ -25,10 +25,4 @@ public record AccountService(AccountRepository accountRepository, AccountMapper 
         return accountRepository.findAll().stream().map(accountMapper::toDto).toList();
     }
 
-    public AccountDto findAccountStatement(String accountNumber) throws AccountNotFoundException {
-        final Account account = findAccount(accountNumber);
-
-        return accountMapper.toDto(account);
-
-    }
 }

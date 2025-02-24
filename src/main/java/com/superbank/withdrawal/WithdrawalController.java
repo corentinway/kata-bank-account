@@ -1,24 +1,25 @@
 package com.superbank.withdrawal;
 
-import com.superbank.model.Account;
 import com.superbank.acount.AccountNotFoundException;
-import com.superbank.acount.AccountService;
+import com.superbank.acount.TransactionService;
+import com.superbank.acount.withdraw.NotEnoughFundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-
-@RestController("/withdrawal")
+@RestController
+@RequestMapping("/withdrawal")
 @Tag(name="widthdrawal", description = "API pour gérer le retrait d'argent sur un compte")
-public record WithdrawalController(AccountService accountService) {
+public record WithdrawalController(TransactionService transactionService ) {
 
     @PostMapping
     @Operation(summary = "Effectuer un retrait d'argent sur un compte", description = "Effectue un retrait d'argent sur un compte bancaire")
@@ -28,28 +29,16 @@ public record WithdrawalController(AccountService accountService) {
             @ApiResponse(responseCode = "403", description = "Solde insuffisant sur le compte bancaire pour faire un retrait", content = @Content(mediaType = "text")),
             @ApiResponse(responseCode = "500", description = "Erreur interne", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<Void> withdraw(
+    public ResponseEntity<String> withdraw(
             @RequestBody @Valid WithdrawalRequestDto withdrawalRequestDto
-    ) throws AccountNotFoundException, WithdrawalInsufficientBalanceException {
-
-        // validate account
-        final String accountNumber = withdrawalRequestDto.accountNumber();
-
-        final Account account = accountService.findAccount(accountNumber);
-
-        final BigDecimal newBalance = account.getBalance().subtract(withdrawalRequestDto.amount());
-
-        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new WithdrawalInsufficientBalanceException(accountNumber);
+    ) throws AccountNotFoundException {
+        try {
+            transactionService.withdraw(withdrawalRequestDto);
+        } catch (NotEnoughFundException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
 
-        account.setBalance(newBalance);
-
-        accountService.updateAccount(account);
-
         return ResponseEntity.ok().build();
-
-
     }
 
 
