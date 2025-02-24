@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.superbank.TransactionFactory.generateTransactions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class TransactionMapperTest {
@@ -55,6 +56,16 @@ public class TransactionMapperTest {
             assertEquals(transactions.get(i).getAmount(), transactionDtos.get(i).getAmount());
             assertEquals(transactions.get(i).getDescription(), transactionDtos.get(i).getDescription());
         }
+    }
+
+    @Test
+    void shouldReturnNullDto() {
+        assertNull( sut.toDto(null));
+    }
+
+    @Test
+    void shouldReturnNullDtos() {
+        assertNull( sut.toDtos(null));
     }
 
 

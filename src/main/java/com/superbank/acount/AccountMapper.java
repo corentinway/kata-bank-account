@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class AccountMapper {
 
     public Account toEntity(CreateAccountRequestDto createAccountRequestDto) {
-        if(createAccountRequestDto == null) {
+        if (createAccountRequestDto == null) {
             return null;
         }
         Account account = new Account();
@@ -17,7 +17,7 @@ public class AccountMapper {
     }
 
     public AccountDto toDto(Account account) {
-        if(account==null) {
+        if (account == null) {
             return null;
         }
 

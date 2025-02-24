@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class AccountMapperTest {
@@ -26,9 +27,19 @@ public class AccountMapperTest {
         // then
         assertEquals("123", account.getAccountNumber());
         assertEquals( BigDecimal.TEN, account.getBalance());
-
-
     }
+
+    @Test
+    void shouldReturnNullEntity() {
+        assertNull(sut.toEntity(null));
+    }
+
+    @Test
+    void shouldReturnNullDto() {
+        assertNull(sut.toDto(null));
+    }
+
+
 
 
 }
